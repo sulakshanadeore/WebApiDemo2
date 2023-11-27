@@ -7,11 +7,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 using WebApiDemo2;
 
 namespace WebApiDemo2.Controllers
 {
+    [EnableCors(origins:"https://localhost:44317/",headers:"*",methods:"*")]
     public class CustomersController : ApiController
     {
         private northwindEntities db = new northwindEntities();

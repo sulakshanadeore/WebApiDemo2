@@ -1,0 +1,76 @@
+A) Create Web api
+
+1) Test the web api
+
+
+2) 2 project so they will execute on two different address which will require CORS on the server side (ie . Web api)
+go back to web api and install microsoft.aspnet.webapi.cors
+
+
+3) in webapiconfig.cs write the following code:
+
+ config.MapHttpAttributeRoutes();
+            config.EnableCors();
+
+4) open your api controller and attach the cors attribute to the controller:
+ [EnableCors(origins:"*",headers:"*",methods:"*")]
+
+
+-----------------------------------
+
+
+B) create a new project---- MVC---->
+
+1) install Microsoft.AspNet.WebApi.Client
+2) install Entity Framework
+3) copy connection string from web.config of api to web.config of MVC
+
+
+
+
+
+2) Add a controller ----CustomerData------- controller with read write actions
+
+
+
+
+
+GET
+
+
+using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("http://localhost:60464/api/");
+                //HTTP GET
+                var responseTask = client.GetAsync("student");
+                responseTask.Wait();
+
+                var result = responseTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+
+                    var readTask = result.Content.ReadAsAsync<Student[]>();
+                    readTask.Wait();
+
+                    var students = readTask.Result;
+
+                    foreach (var student in students)
+                    {
+                        Console.WriteLine(student.Name);
+                    }
+                }
+            }
+
+
+----------------------
+
+POST
+
+var student = new Student() { Name = "Steve" };
+
+            var postTask = client.PostAsJsonAsync<Student>("student", student);
+            postTask.Wait();
+
+            var result = postTask.Result;
+----------------------------------------------------------------------
+
