@@ -19,13 +19,13 @@ namespace WebApiDemo2.Controllers
             cn.Open();
             SqlDataReader dr=cmd.ExecuteReader();
             List<ProductModel> products = new List<ProductModel>();
-            while (dr.HasRows)
+            while (dr.Read())
             {
                 ProductModel productModel = new ProductModel();
-                productModel.Prodid = Convert.ToInt32(dr["0"]); 
-                productModel.Prodname = dr["1"].ToString();
+                productModel.Prodid = Convert.ToInt32(dr["ProductID"]); 
+                productModel.Prodname = dr["ProductName"].ToString();
                 productModel.Price = Convert.ToInt32(dr["UnitPrice"]);
-                productModel.Qty = Convert.ToInt32(dr["QuantityInHand"]);
+                productModel.Qty = dr["QuantityPerUnit"].ToString();
                 products.Add(productModel); 
 
 
@@ -33,16 +33,44 @@ namespace WebApiDemo2.Controllers
             cn.Close();
             return products;    
         }
-        //public ProductModel GetProduct(int id) {
-        
-        //}
+        public ProductModel GetProduct(int id)
+        {
+
+            SqlConnection cn = new SqlConnection("server=Sulakshana\\sqlexpress;Integrated Security=true;database=Northwind");
+            SqlCommand cmd = new SqlCommand("select * from  products where productid="+ id, cn);
+            cn.Open();
+            SqlDataReader dr = cmd.ExecuteReader();
+            ProductModel productModel = new ProductModel();
+            if (dr.HasRows)
+            {
+                dr.Read();
+                
+                productModel.Prodid = Convert.ToInt32(dr["ProductID"]);
+                productModel.Prodname = dr["ProductName"].ToString();
+                productModel.Price = Convert.ToInt32(dr["UnitPrice"]);
+                productModel.Qty = dr["QuantityPerUnit"].ToString();
+            }
+
+
+            cn.Close();
+            //if (productModel != null)
+            //{
+            //    return HttpStatusCode.OK;
+            //}
+            //else
+            //{
+            //    return HttpStatusCode.NotFound;
+            //}
+            return productModel;
+            
+        }
 
         public HttpStatusCode PostProduct(ProductModel product) {
             SqlConnection cn = new SqlConnection("server=Sulakshana\\sqlexpress;Integrated Security=true;database=Northwind");
-            SqlCommand cmd = new SqlCommand("insert into product(productname,UnitPrice,QuantityInHand) values (@productname,@UnitPrice,@QuantityInHand)", cn);
+            SqlCommand cmd = new SqlCommand("insert into products (productname,UnitPrice,QuantityPerUnit) values (@productname,@UnitPrice,@QuantityPerUnit)", cn);
             cmd.Parameters.AddWithValue("@productname", product.Prodname);
             cmd.Parameters.AddWithValue("@UnitPrice", product.Price);
-            cmd.Parameters.AddWithValue("@QuantityInHand", product.Qty);
+            cmd.Parameters.AddWithValue("@QuantityPerUnit", product.Qty);
             cn.Open();
             cmd.ExecuteNonQuery();
             cn.Close();
@@ -52,7 +80,16 @@ namespace WebApiDemo2.Controllers
 
 
         }
-        //public void DeleteProduct(int id) { }   
+        public void DeleteProduct(int id) {
+            SqlConnection cn = new SqlConnection("server=Sulakshana\\sqlexpress;Integrated Security=true;database=Northwind");
+            SqlCommand cmd = new SqlCommand("delete  from  products where productid=" + id, cn);
+            cn.Open();
+            cmd.ExecuteNonQuery();
+            cn.Close();
+
+
+
+        }   
         //public HttpStatusCode PutProduct(ProductModel product) { }
 
 

@@ -11,6 +11,6 @@ namespace WebApiDemo2.Models
 
         public string Prodname { get; set; }
         public int Price { get; set; }
-       public int Qty { get; set; }
+       public string Qty { get; set; }
     }
 }
