@@ -1,0 +1,36 @@
+
+Name
+email
+Services dropdown---select services
+	Submit
+
+
+Pending
+Approved
+
+
+
+Steps:
+Table: UserServices: (PK)Transactionid,NAme,Email,Serviceid,Status
+
+1) Model----> Name,Email, ICollection<Services
+
+
+
+services table:service id,servicename
+2) Services: service id
+		servicename
+
+Create Template:<Submit>
+
+
+-----------------------------------
+Admin:
+Services:
+Inline Function: select * from userservices
+	Template:List----> Edit---> EditMode---> Submit(Approve)
+proceduure---> update 
+
+Pending
+Approve
+		
